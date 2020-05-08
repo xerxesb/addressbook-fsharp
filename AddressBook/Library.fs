@@ -3,23 +3,38 @@
 //type PersonalContact =
 //    | Name of string
     
-type Person = {
-    Name: string
-}
+module Person =
+    type Person = {
+        FirstName: string
+        LastName: string
+    }
     
-type Contact =
-    | PersonalContact of Person
+    let create name age =
+        { FirstName = name
+          LastName = age }
+        
     
-type AddressBook = Contact list
+module Contact =
+    open Person
+    
+    type Contact =
+        | PersonalContact of Person
+    
+module AddressBook =
+    open Contact
+    
+    type AddressBook = Contact list
+    
 
 module Test =
+    open Person
+    open Contact
     let test1 =
-        let luigi = { Name = "Luigi" }
-        let mario = { Name = "Mario" }
-        let contact1 = PersonalContact luigi
-        let contact2 = PersonalContact mario
-        let addressBook = [contact1; contact2]
+        let peach = PersonalContact <| create "Peach" "The Princess"
+        let luigi = PersonalContact <| create "Luigi" "The Brother"
+        let mario = PersonalContact <| create "Mario" "The Plumber"
+        let addressBook = [peach; mario; luigi]
         
         addressBook
         |> List.iter (function
-            | PersonalContact c -> printfn "Name: %s" c.Name)
+            | PersonalContact c -> printfn "Contact Name: %s %s" c.FirstName c.LastName)

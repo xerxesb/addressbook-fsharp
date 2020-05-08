@@ -2,6 +2,8 @@
 
 open System
 open AddressBook
+open Contact
+open Person
 
 let doWhile f c =
     f()
@@ -10,18 +12,22 @@ let doWhile f c =
 
 [<EntryPoint>]
 let main argv =
-    let mutable (addressBook: AddressBook) = []
+    let mutable (addressBook: AddressBook.AddressBook) = []
     let mutable exitCondition = false
     doWhile (fun () ->
-        printf "Enter Name: "
-        let nameString = Console.ReadLine ()
-        let contact = PersonalContact { Name = nameString }
+        printf "Enter First Name: "
+        let firstNameString = Console.ReadLine ()
+        
+        printf "Enter Last Name: "
+        let lastNameString = Console.ReadLine ()
+        
+        let contact = PersonalContact <| create firstNameString lastNameString
         addressBook <- contact :: addressBook
-        exitCondition <- nameString = "EXIT"
+        exitCondition <- firstNameString = "EXIT"
     ) (fun () -> exitCondition)
     
     printfn "...Listing all contacts..."
     addressBook
     |> List.iter (function
-        | PersonalContact c -> printfn "Contact Name: %s" c.Name )
+        | PersonalContact c -> printfn "Contact Name: %s" c.LastName )
     0 // return an integer exit code
