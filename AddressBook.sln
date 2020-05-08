@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "AddressBook", "AddressBook\AddressBook.fsproj", "{913DD993-274E-443E-82DB-A3F1DE107903}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "AddressBook.CLI", "AddressBook.CLI\AddressBook.CLI.fsproj", "{3429234A-EE01-4534-9A30-E9BD5F8F6C6E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{913DD993-274E-443E-82DB-A3F1DE107903}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{913DD993-274E-443E-82DB-A3F1DE107903}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{913DD993-274E-443E-82DB-A3F1DE107903}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{913DD993-274E-443E-82DB-A3F1DE107903}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3429234A-EE01-4534-9A30-E9BD5F8F6C6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3429234A-EE01-4534-9A30-E9BD5F8F6C6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3429234A-EE01-4534-9A30-E9BD5F8F6C6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3429234A-EE01-4534-9A30-E9BD5F8F6C6E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
