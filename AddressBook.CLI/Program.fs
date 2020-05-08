@@ -3,13 +3,22 @@
 open System
 open AddressBook
 
+let doWhile f c =
+    f()
+    while c() = false do
+        f()
+
 [<EntryPoint>]
 let main argv =
     let mutable (addressBook: AddressBook) = []
-    printf "Enter Name: "
-    let nameString = Console.ReadLine ()
-    let contact = PersonalContact { Name = nameString }
-    addressBook <- contact :: addressBook
+    let mutable exitCondition = false
+    doWhile (fun () ->
+        printf "Enter Name: "
+        let nameString = Console.ReadLine ()
+        let contact = PersonalContact { Name = nameString }
+        addressBook <- contact :: addressBook
+        exitCondition <- nameString = "EXIT"
+    ) (fun () -> exitCondition)
     
     printfn "...Listing all contacts..."
     addressBook
