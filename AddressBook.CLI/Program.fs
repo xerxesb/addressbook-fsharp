@@ -38,31 +38,36 @@ module Menu =
         printfn "\n"
         validateKeyChoice key
 
+
 module CreateContactWorkflow =
-    let execute (addressBook: AddressBook.AddressBook) updateFunc =
-        printf "Enter First Name: "
+    let execute (addressBook: AddressBook.AddressBook) updateAddressBookFunc =
+        printf "Enter First Name: " 
         let firstNameString = Console.ReadLine ()
         printf "Enter Last Name: "
         let lastNameString = Console.ReadLine ()
-        let contact = PersonalContact <| create firstNameString lastNameString
-        updateFunc(contact :: addressBook)
         
+        PersonalContact <| create firstNameString lastNameString
+            |> AddressBook.addToAddressBook addressBook
+            |> updateAddressBookFunc
+
+
 module ListAllContactsWorkflow =
     let execute (addressBook: AddressBook.AddressBook) =
         printfn "All entries in the address book:"
         addressBook
-        |> List.iter (function
-            | PersonalContact c -> printfn "Contact Name: %s %s" c.FirstName c.LastName
-           )
-        printfn ""
+        |> List.map (function
+            | PersonalContact c -> sprintf "Contact Name: %s %s" c.FirstName c.LastName)
+        |> String.concat "\n"
+        |> printfn "%s\n"
+
 
 module ExitAppWorkflow =
     let execute f =
         f() |> ignore
 
+
 [<EntryPoint>]
 let main argv =
-    
     let mutable (addressBook: AddressBook.AddressBook) = []
     let mutable exitCondition = false
     doWhile (fun () ->

@@ -25,6 +25,9 @@ module AddressBook =
     
     type AddressBook = Contact list
     
+    let addToAddressBook book person =
+        person :: book
+    
 
 module Test =
     open Person
