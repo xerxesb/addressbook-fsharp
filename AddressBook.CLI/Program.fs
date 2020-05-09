@@ -38,7 +38,7 @@ Enter your selection: "
 
 
 module CreateContactWorkflow =
-    let execute (addressBook: AddressBook.AddressBook) onComplete =
+    let execute addressBook onComplete =
         printf "Enter First Name: " 
         let firstNameString = Console.ReadLine ()
         printf "Enter Last Name: "
@@ -50,13 +50,16 @@ module CreateContactWorkflow =
 
 
 module ListAllContactsWorkflow =
-    let execute (addressBook: AddressBook.AddressBook) onComplete =
-        printfn "All entries in the address book:"
+    let private allEntries addressBook =
         addressBook
         |> List.map (function
             | PersonalContact c -> printContact c)
         |> String.concat "\n"
-        |> printfn "%s\n"
+    
+    let execute addressBook onComplete =
+        match List.length addressBook with
+            | 0 -> printfn "There are no entries in the address book\n"
+            | _ -> printfn "All entries in the address book:\n%s\n" <| allEntries addressBook
         onComplete ()
 
 module SortContactsWorkflow =
@@ -66,7 +69,7 @@ module SortContactsWorkflow =
             | "D" -> Some Descending
             | _ -> None
         
-    let execute (addressBook: AddressBook.AddressBook) onComplete =
+    let execute addressBook onComplete =
         printf "What order? (A)scending or (D)escending? "
         match Console.ReadKey () |> validateChoice with
             | Some Ascending -> SortAddressBook.sort addressBook Ascending
@@ -77,7 +80,6 @@ module SortContactsWorkflow =
 
 [<EntryPoint>]
 let main argv =
-    
     let rec programLoop addressBook exitCondition =
         let startAgain = (fun () -> programLoop addressBook exitCondition)
         let updateAndStartAgain = (fun newBook -> programLoop newBook exitCondition)
