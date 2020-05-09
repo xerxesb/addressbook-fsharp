@@ -1,7 +1,6 @@
 ﻿// Learn more about F# at http://fsharp.org
 
 open System
-open System.Diagnostics
 open AddressBook
 open Contact
 open Person
@@ -10,27 +9,32 @@ module Menu =
     type MenuSelection =
         | CreateNew
         | ListAll
+        | SortAddressBook
         | ExitApp
     type MenuChoice = MenuSelection option
        
-    let private validateKeyChoice (key:ConsoleKeyInfo) =
+    let private validateChoice (key:ConsoleKeyInfo) =
         match (string key.KeyChar).ToUpperInvariant() with
         | "C" -> Some CreateNew
         | "L" -> Some ListAll
+        | "S" -> Some SortAddressBook
         | "X" -> Some ExitApp
         | _ -> None
         
     let private printMenu () =
-        printfn "What would you like to do:
+        printf "Menu:
 1. (C)reate a new person in the address book
 2. (L)ist all people in the address book
-3. E(x)it the program"
+3. (S)ort the address book
+4. E(x)it the program
+
+Enter your selection: "
     
     let getMenuOption () =
         printMenu ()
         let key = Console.ReadKey ()
         printfn "\n"
-        validateKeyChoice key
+        validateChoice key
 
 
 module CreateContactWorkflow =
@@ -53,25 +57,39 @@ module ListAllContactsWorkflow =
             | PersonalContact c -> printContact c)
         |> String.concat "\n"
         |> printfn "%s\n"
-        onComplete()
+        onComplete ()
 
-
-module ExitAppWorkflow =
-    let execute onComplete =
-        onComplete() |> ignore
-
+module SortContactsWorkflow =
+    let private validateChoice (choice:ConsoleKeyInfo) =
+        match (string choice.KeyChar).ToUpperInvariant () with
+            | "A" -> Some Ascending
+            | "D" -> Some Descending
+            | _ -> None
+        
+    let execute (addressBook: AddressBook.AddressBook) onComplete =
+        printf "What order? (A)scending or (D)escending? "
+        match Console.ReadKey () |> validateChoice with
+            | Some Ascending -> SortAddressBook.sort addressBook Ascending
+            | Some Descending -> SortAddressBook.sort addressBook Descending
+            | None -> addressBook
+        |> onComplete
+        
 
 [<EntryPoint>]
 let main argv =
     
     let rec programLoop addressBook exitCondition =
+        let startAgain = (fun () -> programLoop addressBook exitCondition)
+        let updateAndStartAgain = (fun newBook -> programLoop newBook exitCondition)
+        
         if exitCondition then () else
             let selection = Menu.getMenuOption ()
             match selection with
                 | None -> programLoop addressBook exitCondition
-                | Some Menu.CreateNew -> CreateContactWorkflow.execute addressBook (fun newBook -> programLoop newBook exitCondition)
-                | Some Menu.ListAll -> ListAllContactsWorkflow.execute addressBook (fun () -> programLoop addressBook exitCondition)
-                | Some Menu.ExitApp -> ExitAppWorkflow.execute (fun () -> programLoop addressBook true)
+                | Some Menu.CreateNew -> CreateContactWorkflow.execute addressBook updateAndStartAgain
+                | Some Menu.ListAll -> ListAllContactsWorkflow.execute addressBook startAgain
+                | Some Menu.SortAddressBook -> SortContactsWorkflow.execute addressBook updateAndStartAgain
+                | Some Menu.ExitApp -> ()
         ()
         
     let (addressBook: AddressBook.AddressBook) = []
