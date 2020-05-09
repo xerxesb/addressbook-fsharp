@@ -6,12 +6,6 @@ open AddressBook
 open Contact
 open Person
 
-[<DebuggerStepThrough>]
-let doWhile f c =
-    f()
-    while c() = false do
-        f()
-
 module Menu =
     type MenuSelection =
         | CreateNew
@@ -40,7 +34,7 @@ module Menu =
 
 
 module CreateContactWorkflow =
-    let execute (addressBook: AddressBook.AddressBook) updateAddressBookFunc =
+    let execute (addressBook: AddressBook.AddressBook) onComplete =
         printf "Enter First Name: " 
         let firstNameString = Console.ReadLine ()
         printf "Enter Last Name: "
@@ -48,34 +42,39 @@ module CreateContactWorkflow =
         
         PersonalContact <| create firstNameString lastNameString
             |> AddressBook.addToAddressBook addressBook
-            |> updateAddressBookFunc
+            |> onComplete
 
 
 module ListAllContactsWorkflow =
-    let execute (addressBook: AddressBook.AddressBook) =
+    let execute (addressBook: AddressBook.AddressBook) onComplete =
         printfn "All entries in the address book:"
         addressBook
         |> List.map (function
             | PersonalContact c -> printContact c)
         |> String.concat "\n"
         |> printfn "%s\n"
+        onComplete()
 
 
 module ExitAppWorkflow =
-    let execute f =
-        f() |> ignore
+    let execute onComplete =
+        onComplete() |> ignore
 
 
 [<EntryPoint>]
 let main argv =
-    let mutable (addressBook: AddressBook.AddressBook) = []
-    let mutable exitCondition = false
-    doWhile (fun () ->
-        let selection = Menu.getMenuOption ()
-        match selection with
-            | None -> ()
-            | Some Menu.CreateNew -> CreateContactWorkflow.execute addressBook (fun newBook -> addressBook <- newBook)
-            | Some Menu.ListAll -> ListAllContactsWorkflow.execute addressBook
-            | Some Menu.ExitApp -> ExitAppWorkflow.execute (fun () -> exitCondition <- true)
-    ) (fun () -> exitCondition)
+    
+    let rec programLoop addressBook exitCondition =
+        if exitCondition then () else
+            let selection = Menu.getMenuOption ()
+            match selection with
+                | None -> programLoop addressBook exitCondition
+                | Some Menu.CreateNew -> CreateContactWorkflow.execute addressBook (fun newBook -> programLoop newBook exitCondition)
+                | Some Menu.ListAll -> ListAllContactsWorkflow.execute addressBook (fun () -> programLoop addressBook exitCondition)
+                | Some Menu.ExitApp -> ExitAppWorkflow.execute (fun () -> programLoop addressBook true)
+        ()
+        
+    let (addressBook: AddressBook.AddressBook) = []
+    programLoop addressBook false
+    
     0 // return an integer exit code
