@@ -16,9 +16,10 @@ type SortOrder =
     
     
 module Person =
-    let create name age =
-        { FirstName = name
-          LastName = age }
+    let create firstName lastName = {
+          FirstName = firstName
+          LastName = lastName
+    }
         
     
 module Contact =
