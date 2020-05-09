@@ -19,6 +19,9 @@ module Contact =
     
     type Contact =
         | PersonalContact of Person
+        
+    let printContact c =
+        sprintf "Contact Name: %s %s" c.FirstName c.LastName
     
 module AddressBook =
     open Contact

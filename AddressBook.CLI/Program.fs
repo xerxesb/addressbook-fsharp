@@ -56,7 +56,7 @@ module ListAllContactsWorkflow =
         printfn "All entries in the address book:"
         addressBook
         |> List.map (function
-            | PersonalContact c -> sprintf "Contact Name: %s %s" c.FirstName c.LastName)
+            | PersonalContact c -> printContact c)
         |> String.concat "\n"
         |> printfn "%s\n"
 
