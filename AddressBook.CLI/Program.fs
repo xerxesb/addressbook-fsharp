@@ -2,8 +2,8 @@
 
 open System
 open AddressBook
-open Contact
 open Person
+open SortAddressBook
 
 module Menu =
     type MenuSelection =
@@ -44,9 +44,13 @@ module CreateContactWorkflow =
         printf "Enter Last Name: "
         let lastNameString = Console.ReadLine ()
         
-        PersonalContact <| create firstNameString lastNameString
-            |> AddressBook.addToAddressBook addressBook
-            |> onComplete
+        match create firstNameString lastNameString with
+            | Ok c ->
+                AddressBook.addToAddressBook addressBook c
+                |> onComplete
+            | Error m ->
+                printfn "%s" m
+                onComplete addressBook
 
 
 module ListAllContactsWorkflow =
@@ -79,7 +83,7 @@ module SortContactsWorkflow =
         
 
 [<EntryPoint>]
-let main argv =
+let main _ =
     let rec programLoop addressBook exitCondition =
         let startAgain = (fun () -> programLoop addressBook exitCondition)
         let updateAndStartAgain = (fun newBook -> programLoop newBook exitCondition)
@@ -88,9 +92,9 @@ let main argv =
             let selection = Menu.getMenuOption ()
             match selection with
                 | None -> programLoop addressBook exitCondition
-                | Some Menu.CreateNew -> CreateContactWorkflow.execute addressBook updateAndStartAgain
                 | Some Menu.ListAll -> ListAllContactsWorkflow.execute addressBook startAgain
                 | Some Menu.SortAddressBook -> SortContactsWorkflow.execute addressBook updateAndStartAgain
+                | Some Menu.CreateNew -> CreateContactWorkflow.execute addressBook updateAndStartAgain
                 | Some Menu.ExitApp -> ()
         ()
         
