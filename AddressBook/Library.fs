@@ -4,6 +4,8 @@
 module Person =
     let private (>>=) a f = Result.bind f a
 
+    // Look at making this type private so it can't be constructed
+    // https://stackoverflow.com/questions/13925361/is-it-possible-to-enforce-that-a-record-respects-some-invariants/13925632#13925632
     type Person = {
         FirstName: string
         LastName: string
@@ -29,7 +31,7 @@ module Person =
     let meetsSomeArbitraryLengthCriteria (name:string) =
         match name.Length with
         | 1 | 2 -> Error (sprintf "Name [%s] is too short" name)
-        | x when x = 6 -> Error (sprintf "We dont accept people with 6 letter names [%s]" name)
+        | x when x = 6 -> Error (sprintf "We dont accept people with 6 letter names [%s]" name) // This is an example of a Match Expression
         | _ -> Ok name
         
     // Future Xerx is going to look at this and wonder wat?
@@ -52,6 +54,13 @@ module Person =
         // Need to learn about Kleisli (fish) operator?
         // ROP also should have a better answer
         // https://fsharpforfunandprofit.com/posts/recipe-part2/
+        //
+        // DT also suggested using Computation Expressions
+        // https://fsharpforfunandprofit.com/posts/computation-expressions-wrapper-types/#another-example
+        // e.g.
+        // let! n = validateName name
+        // let! a = validateAge age
+        // Person n a
         let errors = [firstName; lastName]
                      |> List.map (function
                          | Ok _ -> ""
@@ -66,13 +75,15 @@ module Person =
     // when doing Railway Oriented Programming
     // https://medium.com/@kai.ito/test-post-3df1cf093edd
     let create firstName lastName =
-        let validationResult = validateInput firstName lastName
-        match validationResult with
-            | Error m -> Error m
-            | Ok _ -> Ok (PersonalContact <| {
-                    FirstName = firstName
-                    LastName = lastName
-                })
+        
+        // The use of map here will map over the results and convert the output into the Person record
+        // This should change - maybe be collapsed into the function above once
+        // we add more fields for validation.
+        validateInput firstName lastName
+        |> Result.map (fun _ -> PersonalContact {
+                                    FirstName = firstName
+                                    LastName = lastName
+                                })
     
     
 module AddressBook =
