@@ -1,6 +1,9 @@
 ﻿namespace AddressBook
 
+
 module Person =
+    let private (>>=) a f = Result.bind f a
+
     type Person = {
         FirstName: string
         LastName: string
@@ -18,33 +21,52 @@ module Person =
         | _ -> Ok name
         
     let hasTitleCase (name:string) =
+        // TODO: Handle case when name is null
         if (string name.[0]).ToUpperInvariant() <> (string name.[0])
-        then Error "Name does not have Title Case"
+        then Error (sprintf "Name [%s] does not have Title Case" name)
         else Ok name
     
-    let meetsSomeAribtraryLengthCriteria (name:string) =
+    let meetsSomeArbitraryLengthCriteria (name:string) =
         match name.Length with
-        | 1 | 2 -> Error "Name is too short"
-        | x when x = 6 -> Error "We dont accept people with 6 letter names"
+        | 1 | 2 -> Error (sprintf "Name [%s] is too short" name)
+        | x when x = 6 -> Error (sprintf "We dont accept people with 6 letter names [%s]" name)
         | _ -> Ok name
         
+    // Future Xerx is going to look at this and wonder wat?
     let validateFirstName name =
         name
-        |> isNotBlank
-        |> Result.bind hasTitleCase
+        |> isNotBlank       // This line uses pipelineing to pass Name into isNotBlank
+        >>= hasTitleCase    // This line uses Result.bind in the definition of a private bind operator (See top of file)
     
     let validateLastName name =
         name
         |> isNotBlank
-        |> Result.bind hasTitleCase
-        |> Result.bind meetsSomeAribtraryLengthCriteria
+        >>= hasTitleCase
+        >>= meetsSomeArbitraryLengthCriteria
     
-    let validateName firstName lastName =
-        validateFirstName firstName
-        |> Result.bind validateLastName
+    let validateInput firstName lastName =
+        let firstName = validateFirstName firstName
+        let lastName = validateLastName lastName
+        
+        // Something smarter can be done here than this...
+        // Need to learn about Kleisli (fish) operator?
+        // ROP also should have a better answer
+        // https://fsharpforfunandprofit.com/posts/recipe-part2/
+        let errors = [firstName; lastName]
+                     |> List.map (function
+                         | Ok _ -> ""
+                         | Error e -> e
+                         )
+                     |> List.filter (fun x -> x <> "")
+        if errors.Length = 0
+        then Ok ()
+        else Error (String.concat "\n" errors)
     
+    // Validation here (and in helper methods above) is an example of Error Handling
+    // when doing Railway Oriented Programming
+    // https://medium.com/@kai.ito/test-post-3df1cf093edd
     let create firstName lastName =
-        let validationResult = validateName firstName lastName
+        let validationResult = validateInput firstName lastName
         match validationResult with
             | Error m -> Error m
             | Ok _ -> Ok (PersonalContact <| {
