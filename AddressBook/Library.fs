@@ -6,16 +6,22 @@ module Person =
 
     // Look at making this type private so it can't be constructed
     // https://stackoverflow.com/questions/13925361/is-it-possible-to-enforce-that-a-record-respects-some-invariants/13925632#13925632
+    //
+    // Also want to explore having stronger types (e.g. an Age type that can't be negative)
     type Person = {
         FirstName: string
         LastName: string
+        Age: int
     }
     
     type Contact =
         | PersonalContact of Person
         
     let printContact c =
-        sprintf "Contact Name: %s %s" c.FirstName c.LastName
+        [
+         sprintf "Contact Name: %s %s" c.FirstName c.LastName ;
+         sprintf "Contact Age: %i" c.Age
+        ] |> String.concat "\n"
         
     let isNotBlank (name:string) =
         match name with
@@ -45,10 +51,16 @@ module Person =
         |> isNotBlank
         >>= hasTitleCase
         >>= meetsSomeArbitraryLengthCriteria
+        
+    let validateAge age =
+        match age with
+        | x when x <= 0 -> Error (sprintf "Age must be greater than 0")
+        | _ -> Ok age
     
-    let validateInput firstName lastName =
+    let validateInput firstName lastName age =
         let firstName = validateFirstName firstName
         let lastName = validateLastName lastName
+        let age = validateAge
         
         // Something smarter can be done here than this...
         // Need to learn about Kleisli (fish) operator?
@@ -61,7 +73,7 @@ module Person =
         // let! n = validateName name
         // let! a = validateAge age
         // Person n a
-        let errors = [firstName; lastName]
+        let errors = [firstName; lastName] //;age THIS WON'T WORK FOR AGE...
                      |> List.map (function
                          | Ok _ -> ""
                          | Error e -> e
@@ -74,15 +86,16 @@ module Person =
     // Validation here (and in helper methods above) is an example of Error Handling
     // when doing Railway Oriented Programming
     // https://medium.com/@kai.ito/test-post-3df1cf093edd
-    let create firstName lastName =
+    let create firstName lastName age =
         
         // The use of map here will map over the results and convert the output into the Person record
         // This should change - maybe be collapsed into the function above once
         // we add more fields for validation.
-        validateInput firstName lastName
+        validateInput firstName lastName age
         |> Result.map (fun _ -> PersonalContact {
                                     FirstName = firstName
                                     LastName = lastName
+                                    Age = age
                                 })
     
     
@@ -112,9 +125,9 @@ module SortAddressBook =
 module Test =
     open Person
     let test1 =
-        let peach = Person.create "Peach" "The Princess"
-        let luigi = Person.create "Luigi" "The Brother"
-        let mario = Person.create "Mario" "The Plumber"
+        let peach = Person.create "Peach" "The Princess" 24
+        let luigi = Person.create "Luigi" "The Brother" 25
+        let mario = Person.create "Mario" "The Plumber" 26
         
         let addressBook = [peach; mario; luigi]
         

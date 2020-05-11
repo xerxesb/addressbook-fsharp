@@ -38,16 +38,32 @@ Enter your selection: "
 
 
 module CreateContactWorkflow =
+    
+    // Should this really be here, or should this be a function on Person?
+    // This is input validation, not domain validation, so it seems to make sense to be here...
+    // IRRESPECTIVE: if the input age is invalid (e.g. they enter a string) then i think we need to handle
+    // it better than this implementation in execute
+    let parseAge (ageAsString:string) =
+        match Int32.TryParse ageAsString with
+        | false, _ -> Error "An invalid age was entered"
+        | true, age -> Ok age
+        
     let execute addressBook onComplete =
         printf "Enter First Name: " 
-        let firstNameString = Console.ReadLine ()
+        let firstName = Console.ReadLine ()
         printf "Enter Last Name: "
-        let lastNameString = Console.ReadLine ()
+        let lastName = Console.ReadLine ()
+        printf "Enter Age: "
+        let ageResult = Console.ReadLine () |> parseAge 
         
-        match create firstNameString lastNameString with
-            | Ok c ->
-                AddressBook.addToAddressBook addressBook c
-                |> onComplete
+        match ageResult with
+            | Ok age -> match create firstName lastName age with
+                            | Ok c ->
+                                AddressBook.addToAddressBook addressBook c
+                                |> onComplete
+                            | Error m ->
+                                printfn "%s" m
+                                onComplete addressBook
             | Error m ->
                 printfn "%s" m
                 onComplete addressBook
