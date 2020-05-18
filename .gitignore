@@ -1,4 +1,12 @@
 .ionide
 .idea
+.vs
+
 **/bin/*
 **/obj/*
+
+.fake
+
+#Paket dependency manager
+.paket/
+paket-files/
