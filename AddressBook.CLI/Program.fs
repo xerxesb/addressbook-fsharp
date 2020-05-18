@@ -3,7 +3,6 @@
 open System
 open AddressBook
 open Person
-open SortAddressBook
 
 module Menu =
     type MenuSelection =
@@ -85,15 +84,14 @@ module ListAllContactsWorkflow =
 module SortContactsWorkflow =
     let private validateChoice (choice:ConsoleKeyInfo) =
         match (string choice.KeyChar).ToUpperInvariant () with
-            | "A" -> Some Ascending
-            | "D" -> Some Descending
+            | "A" -> Some AddressBook.Ascending
+            | "D" -> Some AddressBook.Descending
             | _ -> None
         
     let execute addressBook onComplete =
         printf "What order? (A)scending or (D)escending? "
         match Console.ReadKey () |> validateChoice with
-            | Some Ascending -> SortAddressBook.sort addressBook Ascending
-            | Some Descending -> SortAddressBook.sort addressBook Descending
+            | Some sortOrder -> AddressBook.sort addressBook sortOrder
             | None -> addressBook
         |> onComplete
         

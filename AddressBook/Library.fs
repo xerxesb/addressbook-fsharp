@@ -60,7 +60,22 @@ module Person =
     let validateInput firstName lastName age =
         let firstName = validateFirstName firstName
         let lastName = validateLastName lastName
-        let age = validateAge
+        let age = validateAge age
+        
+        let createContact fname lname age =
+            PersonalContact {
+                FirstName = fname
+                LastName = lname
+                Age = age
+            }
+        
+        firstName |> Result.bind (fun fname ->
+            lastName |> Result.bind (fun lname ->
+                age |> Result.bind (fun age ->
+                    Ok <| createContact fname lname age
+                )
+            )
+        ) |> ignore
         
         // Something smarter can be done here than this...
         // Need to learn about Kleisli (fish) operator?
@@ -103,22 +118,23 @@ module AddressBook =
     open Person
     
     type AddressBook = Contact list
-
-    let addToAddressBook book person =
-        person :: book
-    
-
-module SortAddressBook =
-    open AddressBook
     
     type SortOrder =
         | Ascending
         | Descending
+        // This technique allows you to attach functions to DUs. Unclear when you would exactly want it.
+        // This here as an example of how to do it even if its not the best use case for a DU member function
+        with        
+            member x.sortAddresses addressBook =
+                match x with
+                    | Ascending -> List.sort addressBook
+                    | Descending -> List.sortDescending addressBook
+                
+    let addToAddressBook book person =
+        person :: book
     
-    let sort (addressBook:AddressBook) (order: SortOrder) =
-        match order with
-            | Ascending -> List.sort addressBook
-            | Descending -> List.sortDescending addressBook
+    let sort addressBook (order: SortOrder) =
+        order.sortAddresses addressBook
         
     
 
