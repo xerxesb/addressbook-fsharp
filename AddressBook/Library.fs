@@ -12,6 +12,7 @@ module Person =
         FirstName: string
         LastName: string
         Age: int
+        Email: string
     }
     
     type Contact =
@@ -19,8 +20,9 @@ module Person =
         
     let printContact c =
         [
-         sprintf "Contact Name: %s %s" c.FirstName c.LastName ;
+         sprintf "Contact Name: %s %s" c.FirstName c.LastName 
          sprintf "Contact Age: %i" c.Age
+         sprintf "E-mail: %s" c.Email
         ] |> String.concat "\n"
         
     let isNotBlank (name:string) =
@@ -56,23 +58,32 @@ module Person =
         match age with
         | x when x <= 0 -> Error (sprintf "Age must be greater than 0")
         | _ -> Ok age
+
+    let validateEmail (email:string) = 
+        match email.Contains "@" with
+        | true -> Ok email
+        | false -> Error "Invalid E-mail address"
     
-    let validateInput firstName lastName age =
+    let validateInput firstName lastName age email =
         let firstName = validateFirstName firstName
         let lastName = validateLastName lastName
         let age = validateAge age
+        let email = validateEmail email
         
-        let createContact fname lname age =
+        let createContact fname lname age e =
             PersonalContact {
                 FirstName = fname
                 LastName = lname
                 Age = age
+                Email = e
             }
         
         firstName |> Result.bind (fun fname ->
             lastName |> Result.bind (fun lname ->
                 age |> Result.bind (fun age ->
-                    Ok <| createContact fname lname age
+                    email |> Result.bind (fun e ->
+                        Ok <| createContact fname lname age e
+                    )
                 )
             )
         ) |> ignore
@@ -88,12 +99,14 @@ module Person =
         // let! n = validateName name
         // let! a = validateAge age
         // Person n a
-        let errors = [firstName; lastName] //;age THIS WON'T WORK FOR AGE...
-                     |> List.map (function
-                         | Ok _ -> ""
-                         | Error e -> e
-                         )
-                     |> List.filter (fun x -> x <> "")
+
+        let err (o:Result<_, _>) =
+            match o with
+            | Error x -> Some x
+            | Ok _ -> None
+
+        let errors = [err firstName; err lastName; err age; err email] 
+                     |> List.choose id
         if errors.Length = 0
         then Ok ()
         else Error (String.concat "\n" errors)
@@ -101,16 +114,17 @@ module Person =
     // Validation here (and in helper methods above) is an example of Error Handling
     // when doing Railway Oriented Programming
     // https://medium.com/@kai.ito/test-post-3df1cf093edd
-    let create firstName lastName age =
+    let create firstName lastName age email =
         
         // The use of map here will map over the results and convert the output into the Person record
         // This should change - maybe be collapsed into the function above once
         // we add more fields for validation.
-        validateInput firstName lastName age
+        validateInput firstName lastName age email
         |> Result.map (fun _ -> PersonalContact {
                                     FirstName = firstName
                                     LastName = lastName
                                     Age = age
+                                    Email = email
                                 })
     
     

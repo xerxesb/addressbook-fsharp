@@ -54,9 +54,11 @@ module CreateContactWorkflow =
         let lastName = Console.ReadLine ()
         printf "Enter Age: "
         let ageResult = Console.ReadLine () |> parseAge 
+        printf "Enter E-Mail: "
+        let email = Console.ReadLine ()
         
         match ageResult with
-            | Ok age -> match create firstName lastName age with
+            | Ok age -> match create firstName lastName age email with
                             | Ok c ->
                                 AddressBook.addToAddressBook addressBook c
                                 |> onComplete
