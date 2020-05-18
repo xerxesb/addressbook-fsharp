@@ -136,23 +136,3 @@ module AddressBook =
     let sort addressBook (order: SortOrder) =
         order.sortAddresses addressBook
         
-    
-
-module Test =
-    open Person
-    let test1 =
-        let peach = Person.create "Peach" "The Princess" 24
-        let luigi = Person.create "Luigi" "The Brother" 25
-        let mario = Person.create "Mario" "The Plumber" 26
-        
-        let addressBook = [peach; mario; luigi]
-        
-        let printFunc = (fun (PersonalContact contact) ->
-            printfn "Contact Name: %s %s" contact.FirstName contact.LastName
-            Ok contact
-        )
-        let raisedFunc = Result.bind printFunc
-        
-        addressBook
-            |> List.iter (fun c -> raisedFunc c |> ignore)
-        
