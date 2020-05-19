@@ -1,6 +1,8 @@
-﻿module AddressBook.Tests
+﻿namespace AddressBook.Tests
+
 open Expecto
 
-[<EntryPoint>]
-let main argv =
-    Tests.runTestsInAssembly defaultConfig argv
+module Main =
+    [<EntryPoint>]
+    let main argv =
+        Tests.runTestsInAssembly defaultConfig argv

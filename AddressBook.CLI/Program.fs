@@ -5,6 +5,7 @@ open Person
 
 module Menu =
     type MenuSelection =
+        | FetchFromStorage
         | CreateNew
         | ListAll
         | SortAddressBook
@@ -13,6 +14,7 @@ module Menu =
        
     let private validateChoice (key:ConsoleKeyInfo) =
         match (string key.KeyChar).ToUpperInvariant() with
+        | "F" -> Some FetchFromStorage
         | "C" -> Some CreateNew
         | "L" -> Some ListAll
         | "S" -> Some SortAddressBook
@@ -21,10 +23,11 @@ module Menu =
         
     let private printMenu () =
         printf "Menu:
-1. (C)reate a new person in the address book
-2. (L)ist all people in the address book
-3. (S)ort the address book
-4. E(x)it the program
+1. (F)etch the address book from storage
+2. (C)reate a new person in the address book
+3. (L)ist all people in the address book
+4. (S)ort the address book
+5. E(x)it the program
 
 Enter your selection: "
     
@@ -95,7 +98,11 @@ module SortContactsWorkflow =
             | Some sortOrder -> AddressBook.sort addressBook sortOrder
             | None -> addressBook
         |> onComplete
-        
+
+module FetchFromStorageWorkflow =
+    let execute addressBook onComplete =
+        Persistence.fetchAllAddresses // this is a blocking call...In the real UI we dont want it to block
+        |> onComplete
 
 [<EntryPoint>]
 let main _ =
@@ -107,6 +114,7 @@ let main _ =
             let selection = Menu.getMenuOption ()
             match selection with
                 | None -> programLoop addressBook exitCondition
+                | Some Menu.FetchFromStorage -> FetchFromStorageWorkflow.execute addressBook updateAndStartAgain
                 | Some Menu.ListAll -> ListAllContactsWorkflow.execute addressBook startAgain
                 | Some Menu.SortAddressBook -> SortContactsWorkflow.execute addressBook updateAndStartAgain
                 | Some Menu.CreateNew -> CreateContactWorkflow.execute addressBook updateAndStartAgain

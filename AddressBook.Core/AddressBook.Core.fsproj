@@ -6,6 +6,8 @@
 
     <ItemGroup>
         <Compile Include="AddressBook.fs" />
+        <Compile Include="Helpers.fs" />
+        <Compile Include="Persistence.fs" />
     </ItemGroup>
 
 </Project>
