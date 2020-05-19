@@ -1,6 +1,5 @@
 ﻿namespace AddressBook
 
-
 module Person =
     let private (>>=) a f = Result.bind f a
 
