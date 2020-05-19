@@ -1,7 +1,8 @@
 module Tests
 
 open Expecto
-open AddressBook
+
+open AddressBook.Core
 open Person
 
 let getError (r:Result<_, _>) =
@@ -52,7 +53,7 @@ let contactTests =
   ]
 
 
-open AddressBook.AddressBook
+open AddressBook.Core.AddressBook
 
 [<Tests>]
 let addressBookTests =

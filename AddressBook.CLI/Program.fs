@@ -1,7 +1,6 @@
-﻿// Learn more about F# at http://fsharp.org
+﻿open System
 
-open System
-open AddressBook
+open AddressBook.Core
 open Person
 
 module Menu =

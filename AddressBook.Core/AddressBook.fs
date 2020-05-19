@@ -1,4 +1,4 @@
-﻿namespace AddressBook
+﻿namespace AddressBook.Core
 
 module Person =
     let private (>>=) a f = Result.bind f a

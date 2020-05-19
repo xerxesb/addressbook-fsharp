@@ -10,7 +10,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AddressBook\AddressBook.fsproj" />
+      <ProjectReference Include="..\AddressBook.Core\AddressBook.Core.fsproj" />
     </ItemGroup>
 
 </Project>

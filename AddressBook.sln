@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30104.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "AddressBook", "AddressBook\AddressBook.fsproj", "{913DD993-274E-443E-82DB-A3F1DE107903}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "AddressBook.Core", "AddressBook.Core\AddressBook.Core.fsproj", "{913DD993-274E-443E-82DB-A3F1DE107903}"
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "AddressBook.CLI", "AddressBook.CLI\AddressBook.CLI.fsproj", "{3429234A-EE01-4534-9A30-E9BD5F8F6C6E}"
 EndProject
