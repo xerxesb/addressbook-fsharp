@@ -69,23 +69,20 @@ module Person =
         let age = validateAge age
         let email = validateEmail email
         
-        let createContact fname lname age e =
-            PersonalContact {
-                FirstName = fname
-                LastName = lname
-                Age = age
-                Email = e
-            }
-        
-        firstName |> Result.bind (fun fname ->
+        let contact = firstName |> Result.bind (fun fname ->
             lastName |> Result.bind (fun lname ->
                 age |> Result.bind (fun age ->
                     email |> Result.bind (fun e ->
-                        Ok <| createContact fname lname age e
+                        Ok <| PersonalContact {
+                                  FirstName = fname
+                                  LastName = lname
+                                  Age = age
+                                  Email = e
+                              }
                     )
                 )
             )
-        ) |> ignore
+        )
         
         // Something smarter can be done here than this...
         // Need to learn about Kleisli (fish) operator?
@@ -107,24 +104,16 @@ module Person =
         let errors = [err firstName; err lastName; err age; err email] 
                      |> List.choose id
         if errors.Length = 0
-        then Ok ()
+        then match contact with
+                | Ok c -> Ok c
+                | Error _ -> Error (String.concat "\n" errors)
         else Error (String.concat "\n" errors)
     
     // Validation here (and in helper methods above) is an example of Error Handling
     // when doing Railway Oriented Programming
     // https://medium.com/@kai.ito/test-post-3df1cf093edd
     let create firstName lastName age email =
-        
-        // The use of map here will map over the results and convert the output into the Person record
-        // This should change - maybe be collapsed into the function above once
-        // we add more fields for validation.
         validateInput firstName lastName age email
-        |> Result.map (fun _ -> PersonalContact {
-                                    FirstName = firstName
-                                    LastName = lastName
-                                    Age = age
-                                    Email = email
-                                })
     
     
 module AddressBook =
