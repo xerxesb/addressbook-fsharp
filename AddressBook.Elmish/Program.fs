@@ -6,10 +6,10 @@ open Elmish.WPF
 open AddressBook.Elmish.Views
 
 type Model =
-    { Text: string }
+    { Greeting: string }
 
 let init =
-    { Text = "hello" }
+    { Greeting = "Hello from VM!" }
 
 type Msg =
     | DoNothing
@@ -17,7 +17,9 @@ type Msg =
 let update msg m =
     m
 
-let bindings () : Binding<Model, Msg> list =  []
+let bindings () : Binding<Model, Msg> list =  [
+    "Greeting" |> Binding.oneWay (fun m -> m.Greeting)
+]
 
 [<EntryPoint>]
 [<STAThread>]
