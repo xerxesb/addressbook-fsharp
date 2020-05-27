@@ -12,7 +12,9 @@ module Person =
         LastName: string
         Age: int
         Email: string
-    }
+    } with
+        member this.Id =
+            (this.FirstName + this.LastName).GetHashCode ()
     
     type Contact =
         | PersonalContact of Person

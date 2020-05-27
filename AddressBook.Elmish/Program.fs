@@ -16,14 +16,15 @@ type Msg =
 
 let update msg m =
     match msg with
-    | LoadBook -> { m with Book = AddressBook.Core.Persistence.fetchAllAddresses }
+    | LoadBook -> { m with Book = AddressBook.Core.Persistence.fetchAllAddresses () }
 
 let bindings () : Binding<Model, Msg> list =  [
     "LoadBook" |> Binding.cmd LoadBook
     "Addresses" |> Binding.subModelSeq(
           (fun m -> m.Book),
-          (fun e -> (Contact.getPerson e).FirstName),
+          (fun e -> (Contact.getPerson e).Id),
           (fun () -> [
+                "Id" |> Binding.oneWay (fun (_, e) -> (Contact.getPerson e).Id)
                 "FirstName" |> Binding.oneWay (fun (_, e) -> (Contact.getPerson e).FirstName)
                 "LastName" |> Binding.oneWay (fun (_, e) -> (Contact.getPerson e).LastName)
                 "Age" |> Binding.oneWay (fun (_, e) -> (Contact.getPerson e).Age)

@@ -101,7 +101,7 @@ module SortContactsWorkflow =
 
 module FetchFromStorageWorkflow =
     let execute addressBook onComplete =
-        Persistence.fetchAllAddresses // this is a blocking call...In the real UI we dont want it to block
+        Persistence.fetchAllAddresses () // this is a blocking call...In the real UI we dont want it to block
         |> onComplete
 
 [<EntryPoint>]

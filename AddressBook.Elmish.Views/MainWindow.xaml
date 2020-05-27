@@ -17,6 +17,7 @@
         <StackPanel Grid.Row="1">
             <DataGrid ItemsSource="{Binding Addresses}" IsReadOnly="True" SelectionMode="Single">
                 <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Id}" Header="Id"></DataGridTextColumn>
                     <DataGridTextColumn Binding="{Binding FirstName}" Header="First Name"></DataGridTextColumn>
                     <DataGridTextColumn Binding="{Binding LastName}" Header="Last Name"></DataGridTextColumn>
                     <DataGridTextColumn Binding="{Binding Age}" Header="Age"></DataGridTextColumn>

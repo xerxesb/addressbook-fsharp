@@ -6,7 +6,7 @@ module Persistence =
     open AddressBook
     open Person
     
-    let fetchAllAddresses =
+    let fetchAllAddresses () =
         System.Threading.Thread.Sleep 4000
         let p1 = getContact <| create "FirstN 1" "LastN 1" 11 "test1@email.com"
         let p2 = getContact <| create "FirstN 2" "LastN 2" 22 "test2@email.com"

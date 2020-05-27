@@ -12,7 +12,7 @@ module PersistenceTests =
     let addressBookTests =
         testList "Address Book" [
             testCase "fetching all addresses" <| fun _ ->
-                let book = fetchAllAddresses
+                let book = fetchAllAddresses ()
                 Expect.hasLength book 5 "Hard coded to 5 elements in the list"
                 
                 // Check one element for sanity
