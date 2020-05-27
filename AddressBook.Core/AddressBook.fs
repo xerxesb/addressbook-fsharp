@@ -18,6 +18,7 @@ module Person =
     
     type Contact =
         | PersonalContact of Person
+//        | BusinessContact of (Person * Business)
         
     module Contact =
         let getPerson = function

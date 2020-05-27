@@ -21,7 +21,7 @@ module PersistenceTests =
 
             testCase "simulating a database connection that takes time" <| fun _ ->
                 let startTime = DateTime.Now 
-                fetchAllAddresses |> ignore
+                fetchAllAddresses () |> ignore
                 let endTime = DateTime.Now
                 let diff = endTime - startTime
 
