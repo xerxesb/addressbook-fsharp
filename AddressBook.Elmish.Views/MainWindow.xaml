@@ -5,17 +5,24 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:AddressBook.Elmish.Views"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Address Book POC" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10">
-            <Button Command="{Binding Greet}" Width="100">Greet</Button>
+            <Button Command="{Binding LoadBook}" Width="100">Load Addresses</Button>
         </StackPanel>
         <StackPanel Grid.Row="1">
-            <TextBlock Text="{Binding GreetingMessage}"></TextBlock>
+            <DataGrid ItemsSource="{Binding Addresses}" IsReadOnly="True" SelectionMode="Single">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding FirstName}" Header="First Name"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding LastName}" Header="Last Name"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Age}" Header="Age"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Email}" Header="Email"></DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
         </StackPanel>
     </Grid>
 </Window>

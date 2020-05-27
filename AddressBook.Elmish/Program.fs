@@ -6,21 +6,30 @@ open AddressBook.Core
 open AddressBook.Elmish.Views
 
 type Model =
-    { book : Contact list }
+    { Book : Contact list }
 
 let init =
-    { book = [] }
+    { Book = [] }
 
 type Msg =
     | LoadBook
 
 let update msg m =
     match msg with
-    | LoadBook -> { m with book = AddressBook.Core.Persistence.fetchAllAddresses }
+    | LoadBook -> { m with Book = AddressBook.Core.Persistence.fetchAllAddresses }
 
 let bindings () : Binding<Model, Msg> list =  [
-    "GreetingMessage" |> Binding.oneWay (fun m -> m.book)
-    "Greet" |> Binding.cmd LoadBook
+    "LoadBook" |> Binding.cmd LoadBook
+    "Addresses" |> Binding.subModelSeq(
+          (fun m -> m.Book),
+          (fun e -> (Contact.getPerson e).FirstName),
+          (fun () -> [
+                "FirstName" |> Binding.oneWay (fun (_, e) -> (Contact.getPerson e).FirstName)
+                "LastName" |> Binding.oneWay (fun (_, e) -> (Contact.getPerson e).LastName)
+                "Age" |> Binding.oneWay (fun (_, e) -> (Contact.getPerson e).Age)
+                "Email" |> Binding.oneWay (fun (_, e) -> (Contact.getPerson e).Email)
+          ])
+      )
 ]
 
 [<EntryPoint>]
@@ -28,4 +37,6 @@ let bindings () : Binding<Model, Msg> list =  [
 let main argv =
     Program.mkSimpleWpf (fun _ -> init) update bindings
     |> Program.withConsoleTrace
-    |> Program.runWindow(MainWindow())
+    |> Program.runWindowWithConfig
+        { ElmConfig.Default with LogConsole = true; Measure = true }
+        (MainWindow())

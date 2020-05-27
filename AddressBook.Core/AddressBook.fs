@@ -17,6 +17,10 @@ module Person =
     type Contact =
         | PersonalContact of Person
         
+    module Contact =
+        let getPerson = function
+            | PersonalContact x -> x
+        
     let printContact c =
         [
          sprintf "Contact Name: %s %s" c.FirstName c.LastName 
