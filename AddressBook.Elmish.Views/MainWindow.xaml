@@ -7,6 +7,10 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <TextBlock Text="{Binding Greeting}"></TextBlock>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+            <TextBlock Text="{Binding GreetingMessage}"></TextBlock>
+            <Button Command="{Binding Greet}" Width="100">Greet</Button>
+        </StackPanel>
+        
     </Grid>
 </Window>
