@@ -1,24 +1,26 @@
 ﻿open System
+open AddressBook.Core.Person
 open Elmish
 open Elmish.WPF
+open AddressBook.Core
 open AddressBook.Elmish.Views
 
 type Model =
-    { Greeting: string }
+    { book : Contact list }
 
 let init =
-    { Greeting = "Hello from VM!" }
+    { book = [] }
 
 type Msg =
-    | Greet
+    | LoadBook
 
 let update msg m =
     match msg with
-    | Greet -> { m with Greeting = "You pressed the button!" }
+    | LoadBook -> { m with book = AddressBook.Core.Persistence.fetchAllAddresses }
 
 let bindings () : Binding<Model, Msg> list =  [
-    "GreetingMessage" |> Binding.oneWay (fun m -> m.Greeting)
-    "Greet" |> Binding.cmd Greet
+    "GreetingMessage" |> Binding.oneWay (fun m -> m.book)
+    "Greet" |> Binding.cmd LoadBook
 ]
 
 [<EntryPoint>]

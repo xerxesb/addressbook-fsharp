@@ -7,10 +7,15 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
-            <TextBlock Text="{Binding GreetingMessage}"></TextBlock>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10">
             <Button Command="{Binding Greet}" Width="100">Greet</Button>
         </StackPanel>
-        
+        <StackPanel Grid.Row="1">
+            <TextBlock Text="{Binding GreetingMessage}"></TextBlock>
+        </StackPanel>
     </Grid>
 </Window>
