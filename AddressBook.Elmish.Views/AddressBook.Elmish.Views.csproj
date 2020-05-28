@@ -9,11 +9,19 @@
       <Generator>
       </Generator>
     </Page>
+    <Page Remove="paket-files\**" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Remove="paket-files\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="paket-files\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="paket-files\**" />
   </ItemGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>

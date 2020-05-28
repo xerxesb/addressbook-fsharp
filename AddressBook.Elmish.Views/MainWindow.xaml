@@ -15,7 +15,7 @@
             <Button Command="{Binding LoadBook}" Width="100">Load Addresses</Button>
         </StackPanel>
         <StackPanel Grid.Row="1">
-            <DataGrid ItemsSource="{Binding Addresses}" IsReadOnly="True" SelectionMode="Single">
+            <DataGrid ItemsSource="{Binding Addresses}" IsReadOnly="True" SelectionMode="Single" SelectedItem="{Binding SelectedPerson}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Id}" Header="Id"></DataGridTextColumn>
                     <DataGridTextColumn Binding="{Binding FirstName}" Header="First Name"></DataGridTextColumn>

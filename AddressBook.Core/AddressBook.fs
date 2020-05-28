@@ -19,6 +19,10 @@ module Person =
     type Contact =
         | PersonalContact of Person
 //        | BusinessContact of (Person * Business)
+        with
+        member this.Id =
+            match this with
+            | PersonalContact c -> c.Id
         
     module Contact =
         let getPerson = function

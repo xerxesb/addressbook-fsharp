@@ -6,17 +6,22 @@ open AddressBook.Core
 open AddressBook.Elmish.Views
 
 type Model =
-    { Book : Contact list }
+    { Book : Contact list
+      SelectedId: int option }
 
 let init =
-    { Book = [] }
+    { Book = []
+      SelectedId = None }
 
 type Msg =
     | LoadBook
+    | Select of int option
 
 let update msg m =
     match msg with
     | LoadBook -> { m with Book = AddressBook.Core.Persistence.fetchAllAddresses () }
+    | Select x -> System.Diagnostics.Trace.WriteLine <| sprintf "Selected model with id %A" x
+                  { m with SelectedId = x }
 
 let bindings () : Binding<Model, Msg> list =  [
     "LoadBook" |> Binding.cmd LoadBook
@@ -30,7 +35,12 @@ let bindings () : Binding<Model, Msg> list =  [
                 "Age" |> Binding.oneWay (fun (_, e) -> (Contact.getPerson e).Age)
                 "Email" |> Binding.oneWay (fun (_, e) -> (Contact.getPerson e).Email)
           ])
+          
       )
+    // The api docs say not to use this method and instead use binding.twoway, but i couldnt get it to work
+    // It spits out binding errors to the trace
+//    "SelectedPerson" |> Binding.twoWay ((fun m -> m.SelectedId), (fun v -> Select v))
+    "SelectedPerson" |> Binding.subModelSelectedItem("Addresses", (fun m -> m.SelectedId), Select)
 ]
 
 [<EntryPoint>]
