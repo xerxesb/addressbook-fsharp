@@ -11,11 +11,17 @@
             <RowDefinition Height="50"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left">
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Margin" Value="10 10 10 10"></Setter>
+                </Style>
+            </StackPanel.Resources>
             <Button Command="{Binding LoadBook}" Width="100">Load Addresses</Button>
+            <Button Command="{Binding EditContact}" IsEnabled="{Binding CanEditContact}" Width="100">Edit Contact</Button>
         </StackPanel>
         <StackPanel Grid.Row="1">
-            <DataGrid ItemsSource="{Binding Addresses}" IsReadOnly="True" SelectionMode="Single" SelectedItem="{Binding SelectedPerson}">
+            <DataGrid ItemsSource="{Binding Addresses}" IsReadOnly="True" SelectionMode="Single" SelectedItem="{Binding SelectedContact}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Id}" Header="Id"></DataGridTextColumn>
                     <DataGridTextColumn Binding="{Binding FirstName}" Header="First Name"></DataGridTextColumn>
