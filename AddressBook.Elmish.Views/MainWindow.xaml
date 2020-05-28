@@ -4,8 +4,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:AddressBook.Elmish.Views"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="Address Book POC" Height="450" Width="800">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <materialDesign:BundledTheme BaseTheme="Light" PrimaryColor="DeepPurple" SecondaryColor="Lime" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"></RowDefinition>
@@ -17,8 +26,8 @@
                     <Setter Property="Margin" Value="10 10 10 10"></Setter>
                 </Style>
             </StackPanel.Resources>
-            <Button Command="{Binding LoadBook}" Width="100">Load Addresses</Button>
-            <Button Command="{Binding EditContact}" IsEnabled="{Binding CanEditContact}" Width="100">Edit Contact</Button>
+            <Button Command="{Binding LoadBook}" Style="{DynamicResource MaterialDesignFlatButton}">Load Addresses</Button>
+            <Button Command="{Binding EditContact}" IsEnabled="{Binding CanEditContact}" Style="{DynamicResource MaterialDesignFlatButton}">Edit Contact</Button>
         </StackPanel>
         <StackPanel Grid.Row="1">
             <DataGrid ItemsSource="{Binding Addresses}" IsReadOnly="True" SelectionMode="Single" SelectedItem="{Binding SelectedContact}">

@@ -1,2 +1,3 @@
 nuget Elmish
 nuget Elmish.WPF
+nuget MaterialDesignThemes
