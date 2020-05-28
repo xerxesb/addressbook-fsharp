@@ -1,4 +1,5 @@
 ﻿open System
+open System.Windows
 open AddressBook.Core.Person
 open Elmish
 open Elmish.WPF
@@ -47,6 +48,7 @@ let bindings () : Binding<Model, Msg> list =  [
 [<EntryPoint>]
 [<STAThread>]
 let main argv =
+    Application() |> ignore
     Program.mkSimpleWpf (fun _ -> init) update bindings
     |> Program.withConsoleTrace
     |> Program.runWindowWithConfig

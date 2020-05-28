@@ -7,4 +7,5 @@ NUGET
     Elmish.WPF (3.5.6)
       Elmish (>= 3.0.3 < 4.0) - restriction: || (== netcoreapp3.1) (&& (== netstandard2.0) (>= net461)) (&& (== netstandard2.0) (>= netcoreapp3.0)) (&& (== netstandard2.1) (>= net461)) (&& (== netstandard2.1) (>= netcoreapp3.0))
       FSharp.Core (>= 4.6.2) - restriction: || (== netcoreapp3.1) (&& (== netstandard2.0) (>= net461)) (&& (== netstandard2.0) (>= netcoreapp3.0)) (&& (== netstandard2.1) (>= net461)) (&& (== netstandard2.1) (>= netcoreapp3.0))
+    FluentWPF (0.8)
     FSharp.Core (4.7.2)
